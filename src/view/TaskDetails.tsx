@@ -1,28 +1,27 @@
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from './App'
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
+import { useTaskDetailsViewModel } from "../viewmodel/TaskDetailsViewModel";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Details'>
+type RoutesProp = RouteProp<RootStackParamList, "Details">;
 
-const TaskDetails: React.FC<Props> = ({ route }) => {
-  const { task, onDelete } = route.params
+const TaskDetails = () => {
+  const { task, onDelete } = useRoute<RoutesProp>().params;
 
-  const handleDelete = () => {
-    onDelete(task.id)
-  }
+  const { deleteTask } = useTaskDetailsViewModel(task, onDelete);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{task.title}</Text>
       <Text style={styles.description}>{task.description}</Text>
 
-      <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+      <TouchableOpacity style={styles.deleteButton} onPress={deleteTask}>
         <Text style={styles.deleteText}>Excluir tarefa</Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -52,6 +51,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-})
+});
 
-export default TaskDetails
+export default TaskDetails;

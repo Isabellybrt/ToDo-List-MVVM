@@ -1,40 +1,15 @@
-import React, { useState } from 'react'
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useNavigation } from '@react-navigation/native'
-import { RootStackParamList, Task } from './App'
+import React from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../App";
+import { useHomeViewModel } from "../viewmodel/HomeViewModel";
 
-type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>
+type HomeNavProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 
 const HomeScreen = () => {
-  const navigation = useNavigation<HomeNavProp>()
-  const [tasks, setTasks] = useState<Task[]>([])
-
-  const toggleTaskDone = (id: number) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
-    )
-  }
-
-  const handleOpenCreate = () => {
-    navigation.navigate('Task', {
-      onSave: (task: Task) => {
-        setTasks((prev) => [...prev, task])
-      },
-    })
-  }
-
-  const handleOpenDetails = (task: Task) => {
-    navigation.navigate('Details', { 
-      task, 
-      onDelete: handleDelete 
-    })
-  }
-
-  const handleDelete = (id: number) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id))
-    navigation.goBack()
-  }
+  const navigation = useNavigation<HomeNavProp>();
+  const { tasks, addTask, toggleDone, deleteTask } = useHomeViewModel();
 
   return (
     <View style={styles.container}>
@@ -45,29 +20,29 @@ const HomeScreen = () => {
       ) : (
         <FlatList
           data={tasks}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(t) => t.id.toString()}
           renderItem={({ item }) => (
-            
             <View style={[styles.taskCard, item.done && styles.taskDone]}>
               <TouchableOpacity
                 style={[styles.checkbox, item.done && styles.checkboxChecked]}
-                onPress={() => toggleTaskDone(item.id)}>
+                onPress={() => toggleDone(item.id)}
+              >
                 {item.done && <Text style={styles.checkmark}>✓</Text>}
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.textContainer}
-                onPress={() => handleOpenDetails(item)}
+                onPress={() =>
+                  navigation.navigate("Details", {
+                    task: item,
+                    onDelete: deleteTask,
+                  })
+                }
               >
-                <Text
-                  style={[styles.taskTitle, item.done && styles.taskTitleDone]}
-                >
+                <Text style={[styles.taskTitle, item.done && styles.taskTitleDone]}>
                   {item.title}
                 </Text>
-                <Text
-                  style={[styles.taskDescription, item.done && styles.taskDescDone]}
-                  numberOfLines={1}
-                >
+                <Text style={[styles.taskDescription, item.done && styles.taskDescDone]} numberOfLines={1}>
                   {item.description}
                 </Text>
               </TouchableOpacity>
@@ -76,12 +51,19 @@ const HomeScreen = () => {
         />
       )}
 
-      <TouchableOpacity style={styles.addButton} onPress={handleOpenCreate}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() =>
+          navigation.navigate("Task", {
+            onSave: addTask,
+          })
+        }
+      >
         <Text style={styles.addButtonText}>+ Nova Tarefa</Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: { 
@@ -107,11 +89,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
   },
   checkbox: {
     width: 24,
@@ -160,13 +137,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     marginTop: 20,
-    elevation: 3,
   },
   addButtonText: { 
     color: '#fff', 
     fontSize: 16, 
     fontWeight: '600' 
   },
-})
+});
 
 export default HomeScreen;
