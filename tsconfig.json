@@ -1,6 +1,14 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    // necessário para Jest + TypeScript
+    "types": ["jest", "node"],
+
+    // opcional, mas recomendável
+    "forceConsistentCasingInFileNames": true
   }
 }
