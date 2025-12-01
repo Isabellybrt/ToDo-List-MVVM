@@ -1,8 +1,8 @@
-import { TaskRepository } from "../repositories/TaskRepository";
 import { Task } from "../entities/Task";
+import { ITaskRepository } from "../repositories/ITaskRepository";
 
 export class TaskService {
-  private repository = new TaskRepository();
+  constructor(private repository: ITaskRepository){}
 
   listTasks() {
     return this.repository.getAll();

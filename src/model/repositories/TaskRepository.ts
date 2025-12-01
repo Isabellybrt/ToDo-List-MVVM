@@ -1,9 +1,11 @@
 import { Task } from "../entities/Task";
+import { ITaskRepository } from "./ITaskRepository";
 
-export class TaskRepository {
+
+export class TaskRepository implements ITaskRepository {
   private tasks: Task[] = [];
 
-  getAll() {
+  getAll(): Task[] {
     return this.tasks;
   }
 
