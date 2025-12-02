@@ -41,12 +41,7 @@ A estrutura do projeto segue o padrão **Model–View–ViewModel**, separando r
 
 ---
 
-## Injeção de Dependência (DI)
-
-A **Inversão de Dependência (ID)** e a **Injeção de Dependência (DI)** foram aplicadas para reduzir acoplamento entre camadas e facilitar os testes.
-
-### **1. Interface como Contrato**
-
+## 1. Interface como Contrato
 O acesso a dados ocorre via a interface `ITaskRepository`:
 
 ```ts
@@ -58,12 +53,13 @@ export interface ITaskRepository {
 }
 ```
 
-Isso permite trocar facilmente a implementação concreta por mocks nos testes.
+- O serviço depende da **abstração**, não da implementação concreta.  
+- Isso permite trocar facilmente a implementação por **mocks** nos testes.  
+- Aqui aplicamos o **princípio da Inversão de Dependência (ID)**.
 
 ---
 
-### **2. Serviço Recebendo Dependências via DI**
-
+## 2. Serviço Recebendo Dependências via DI
 O `TaskService` recebe a implementação do repositório por meio do construtor:
 
 ```ts
@@ -72,25 +68,45 @@ export class TaskService {
 }
 ```
 
-Assim, o serviço **não cria** a dependência, apenas a utiliza.
+- O serviço **não cria** a dependência, apenas a utiliza.  
+- A dependência é **injetada de fora para dentro**, aplicando **Injeção de Dependência (DI)**.
 
 ---
 
-### **3. DI nos ViewModels**
-
+## 3. DI nos ViewModels
 Os ViewModels também recebem suas dependências, permitindo substituição em tempo de teste:
 
 ```ts
 export const useHomeViewModel = (service: TaskService = defaultService) => {
+};
 ```
 
 Nos testes:
-
 ```ts
 const mockService = new TaskService(mockRepository);
 ```
 
-A camada superior depende da **abstração**, não da implementação — aplicando o princípio de Inversão de Dependência.
+- A camada superior depende da abstração, não da implementação.  
+- Isso reforça o uso da **Inversão de Dependência**.
+
+---
+
+## 4. Diferença entre ID e DI
+- **Inversão de Dependência (ID)** → é o **princípio**: módulos de alto nível devem depender de abstrações, não de implementações.  
+- **Injeção de Dependência (DI)** → é a **técnica**: como fornecemos essas dependências (via construtor, setter ou propriedade).  
+
+👉 Em resumo:  
+- **ID** é o *"o que"* (depender de abstrações).  
+- **DI** é o *"como"* (injetar a implementação concreta).
+
+---
+
+## 5. Benefícios da DI e ID
+- 🔹 Redução de acoplamento entre camadas  
+- 🔹 Testes mais simples com mocks e stubs  
+- 🔹 Facilidade para trocar implementações futuramente  
+- 🔹 Código mais limpo e flexível  
+- 🔹 Aderência aos princípios do **SOLID**
 
 ---
 
