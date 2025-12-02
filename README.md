@@ -1,135 +1,218 @@
-# ToDo List
+# ToDo List MVVM
 
-Aplicativo mobile desenvolvido em **React Native** e **TypeScript**, utilizando os padrões arquiteturais **MVVM**, **Inversão de Dependência (DI)** e **testes automatizados**. O projeto foi criado para a disciplina de Engenharia de Software.
-
----
-
-## Descrição do Projeto
-
-O sistema consiste em uma ToDo List que permite criar, listar, visualizar e gerenciar tarefas. O aplicativo é dividido em três telas principais:
-
-1. Lista de Tarefas
-2. Criar Tarefa
-3. Detalhes da Tarefa
-
-A arquitetura foi planejada para garantir organização, reuso de código, testabilidade e facilidade de manutenção.
+Aplicativo mobile desenvolvido em **React Native** e **TypeScript**, utilizando **Arquitetura MVVM**, **Inversão de Dependência (DI)** e **testes automatizados**.
+Projeto desenvolvido para a disciplina de Engenharia de Software.
 
 ---
 
-## Estrutura do Projeto
+## Visão Geral
 
+O **ToDo List MVVM** é um aplicativo de gerenciamento de tarefas que demonstra uma implementação limpa da arquitetura MVVM aliada a boas práticas de engenharia de software.
+O usuário pode:
+
+* Criar novas tarefas com título e descrição
+* Listar todas as tarefas cadastradas
+* Marcar tarefas como concluídas
+* Excluir tarefas existentes
+
+---
+
+## Arquitetura MVVM
+
+A estrutura do projeto segue o padrão **Model–View–ViewModel**, separando responsabilidades de forma clara.
+
+### **Model**
+
+* **Entidades:** Representam os dados do domínio (ex: `Task`)
+* **Repositórios:** Interfaces e implementações de acesso a dados (ex: `TaskRepository`)
+* **Serviços:** Camada de regras de negócio (ex: `TaskService`)
+
+### **View**
+
+* Componentes React Native responsáveis pela interface do usuário
+* Não possuem lógica de negócio
+* Recebem dados e ações via ViewModels
+
+### **ViewModel**
+
+* Faz a ponte entre Model e View
+* Expõe estados, dados e funções
+* Reage às ações do usuário e manipula a lógica da aplicação através dos serviços
+
+---
+
+## Injeção de Dependência (DI)
+
+A **Inversão de Dependência (ID)** e a **Injeção de Dependência (DI)** foram aplicadas para reduzir acoplamento entre camadas e facilitar os testes.
+
+### **1. Interface como Contrato**
+
+O acesso a dados ocorre via a interface `ITaskRepository`:
+
+```ts
+export interface ITaskRepository {
+  getAll(): Task[];
+  add(task: Task): void;
+  update(task: Task): void;
+  delete(id: number): void;
+}
 ```
-src/
-  model/
-    entities/
-      Task.ts
-      RootStackParamList.ts
-    services/
-    repositories/
-  viewmodel/
-  view/
-  test/
+
+Isso permite trocar facilmente a implementação concreta por mocks nos testes.
+
+---
+
+### **2. Serviço Recebendo Dependências via DI**
+
+O `TaskService` recebe a implementação do repositório por meio do construtor:
+
+```ts
+export class TaskService {
+  constructor(private repository: ITaskRepository) {}
+}
 ```
 
----
-
-## Aplicação da Arquitetura MVVM
-
-O padrão **Model-View-ViewModel (MVVM)** foi utilizado para estruturar o projeto de forma modular e escalável.
-
-- **Model**
-Contém as entidades, regras de negócio, repositórios e serviços. Representa o domínio da aplicação, sendo independente da interface. Inclui os modelos de dados e as implementações de acesso ao repositório de tarefas.
-
-- **ViewModel**
-Centraliza e gerencia o estado exibido pela View. Processa entradas do usuário, executa validações, chama métodos do Model e expõe estados prontos para renderização. É totalmente testável, pois não possui dependência direta da UI.
-
-- **View**
-Representa a interface do usuário. Exibe dados vindos da ViewModel e envia comandos de interação. Não contém lógica de negócio.
+Assim, o serviço **não cria** a dependência, apenas a utiliza.
 
 ---
 
-## Inversão de Dependências (DI)
+### **3. DI nos ViewModels**
 
-A Inversão de Dependências foi aplicada ao serviço responsável pela persistência das tarefas.
-O repositório de tarefas é acessado através de uma interface, permitindo substituir a implementação conforme necessário (por exemplo, uso de mock nos testes). Isso facilita testes unitários, desacopla camadas e melhora a escalabilidade do projeto.
+Os ViewModels também recebem suas dependências, permitindo substituição em tempo de teste:
 
----
+```ts
+export const useHomeViewModel = (service: TaskService = defaultService) => {
+```
 
-## Testes Automatizados
+Nos testes:
 
-Foram implementados testes utilizando **Jest** com foco na camada de lógica de negócio.
+```ts
+const mockService = new TaskService(mockRepository);
+```
 
-Os testes incluem:
-
-* Testes unitários da ViewModel
-* Testes das funções relacionadas ao CRUD de tarefas
-* Uso de mocks para isolar dependências e garantir reprodutibilidade
-
-O diretório `test/` contém todos os arquivos de testes organizados por módulos.
+A camada superior depende da **abstração**, não da implementação — aplicando o princípio de Inversão de Dependência.
 
 ---
 
-## Instalação e Execução do Aplicativo
+### **4. Benefícios da DI**
 
-### Pré-requisitos
+* Redução de acoplamento entre camadas
+* Testes mais simples com mocks e stubs
+* Facilidade para trocar implementações futuramente
+* Código mais limpo e flexível
+* Aderência aos princípios do SOLID
 
-* Node.js 18 ou superior
+---
+
+## Como Executar o Projeto
+
+### **Pré-requisitos**
+
+* Node.js 16+
 * npm ou yarn
-* Expo CLI instalada globalmente (opcional)
+* Expo CLI instalada globalmente:
 
-### Passo a passo
+```bash
+npm install -g expo-cli
+```
 
-1. **Clonar o repositório**
+### **Instalação**
+
+1. Clone o repositório:
 
    ```bash
    git clone https://github.com/Isabellybrt/ToDo-List-MVVM.git
    cd ToDo-List-MVVM
    ```
 
-2. **Instalar dependências**
+2. Instale as dependências:
 
    ```bash
    npm install
    ```
 
-   ou
+3. Inicie o servidor de desenvolvimento:
 
    ```bash
-   yarn install
+   npm start
    ```
 
-3. **Executar o aplicativo**
-
-   ```bash
-   npx expo start
-   ```
+4. Utilize o aplicativo Expo Go ou um emulador para visualizar o app.
 
 ---
 
-## Execução dos Testes
+## Como Executar os Testes
 
-1. Certifique-se de que as dependências já estão instaladas.
-2. Execute:
+O projeto utiliza **Jest** e **React Testing Library**.
 
-   ```bash
-   npm test
-   ```
+### Rodar todos os testes:
 
-   ou
+```bash
+npm test
+```
 
-   ```bash
-   yarn test
-   ```
+### Rodar um teste específico:
 
-Os testes serão executados no Jest e o relatório aparecerá no terminal.
+```bash
+npm test NomeDoArquivo.test.ts
+```
+
+Exemplo:
+
+```bash
+npm test TaskService.test.ts
+```
+
+### Gerar relatório de cobertura:
+
+```bash
+npm test -- --coverage
+```
 
 ---
 
-## Equipe
+## 🗂 Estrutura do Projeto
+
+```
+src/
+├── model/
+│   ├── entities/       # Entidades do domínio
+│   │   └── Task.ts
+│   ├── repositories/   # Interfaces e repositórios concretos
+│   │   ├── ITaskRepository.ts
+│   │   └── TaskRepository.ts
+│   └── services/       # Serviços (regras de negócio)
+│       └── TaskService.ts
+│
+├── view/               # Componentes de interface
+│   ├── CreateTask.tsx
+│   ├── HomeScreen.tsx
+│   └── TaskDetails.tsx
+│
+├── viewmodel/          # Lógica de apresentação
+│   ├── CreateTaskViewModel.ts
+│   ├── HomeViewModel.ts
+│   └── TaskDetailsViewModel.ts
+│
+└── __tests__/
+    ├── service/        # Testes dos serviços
+    └── viewmodel/      # Testes dos ViewModels
+    └── repositories    # Testes de Repositorio
+```
+
+---
+
+## 👥 Autores
 
 * [larissaNa](https://github.com/larissaNa)
 * [Isabellybrt](https://github.com/Isabellybrt)
 * [Luis-Sampaio1](https://github.com/Luis-Sampaio1)
 * [julioCerqueira-git](https://github.com/julioCerqueira-git)
 * [vanessapereiracunha](https://github.com/vanessapereiracunha)
+
+---
+
+## 📄 Licença
+
+Projeto licenciado sob a licença **MIT**.
 
