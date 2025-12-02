@@ -1,10 +1,19 @@
 module.exports = {
-  preset: 'jest-expo',
-  testEnvironment: 'node',
-  transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+  preset: "ts-jest",
+  testEnvironment: "node",
+
+  modulePathIgnorePatterns: [
+    "<rootDir>/dist/",
+    "<rootDir>/build/",
+  ],
+
+  // impede o Jest de tentar carregar módulos nativos
+  moduleNameMapper: {
+    "^react-native$": "<rootDir>/__mocks__/reactNativeMock.js",
+    "expo(.*)$": "<rootDir>/__mocks__/expoMock.js",
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  setupFilesAfterEnv: ['./jest.setup.ts'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+
+  transformIgnorePatterns: [
+    "node_modules/(?!jest-runtime)"
+  ]
 };
