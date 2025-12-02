@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Task } from "../model/entities/Task";
 import { TaskService } from "../model/services/TaskService";
+import { TaskRepository } from "../model/repositories/TaskRepository";
 
-const service = new TaskService();
+const defaultService = new TaskService(new TaskRepository());
 
-export const useHomeViewModel = () => {
-  const [tasks, setTasks] = useState<Task[]>(service.listTasks());
+export const useHomeViewModel = (service: TaskService = defaultService) => { 
+  const [tasks, setTasks] = useState<Task[]>(service.listTasks());
 
   const refresh = () => {
     setTasks([...service.listTasks()]);
