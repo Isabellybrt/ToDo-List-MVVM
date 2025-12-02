@@ -1,1 +1,1 @@
-import '@testing-library/jest-native/extend-expect';
+// setup de testes vazio por enquanto (somente testes de serviço)
