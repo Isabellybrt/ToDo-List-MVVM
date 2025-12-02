@@ -167,6 +167,18 @@ O projeto utiliza **Jest** e **React Testing Library**.
 npm test
 ```
 
+### Rodar um teste específico:
+
+```bash
+npx jest NomeDoArquivo
+```
+
+Exemplo:
+
+```bash
+npx jest TaskService
+```
+
 ### Gerar relatório de cobertura:
 
 ```bash
