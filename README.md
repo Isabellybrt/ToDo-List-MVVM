@@ -102,11 +102,11 @@ const mockService = new TaskService(mockRepository);
 ---
 
 ## 5. Benefícios da DI e ID
-- 🔹 Redução de acoplamento entre camadas  
-- 🔹 Testes mais simples com mocks e stubs  
-- 🔹 Facilidade para trocar implementações futuramente  
-- 🔹 Código mais limpo e flexível  
-- 🔹 Aderência aos princípios do **SOLID**
+- Redução de acoplamento entre camadas  
+- Testes mais simples com mocks e stubs  
+- Facilidade para trocar implementações futuramente  
+- Código mais limpo e flexível  
+- Aderência aos princípios do **SOLID**
 
 ---
 
