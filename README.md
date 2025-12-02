@@ -204,11 +204,11 @@ src/
 
 ## 👥 Autores
 
-* [larissaNa](https://github.com/larissaNa)
-* [Isabellybrt](https://github.com/Isabellybrt)
-* [Luis-Sampaio1](https://github.com/Luis-Sampaio1)
-* [julioCerqueira-git](https://github.com/julioCerqueira-git)
-* [vanessapereiracunha](https://github.com/vanessapereiracunha)
+* Larissa Souza do Nascimento [2024116TADS0027] - [larissaNa](https://github.com/larissaNa)
+* Maria Isabelly de Brito Rodrigues [2024116TADS0020] - [Isabellybrt](https://github.com/Isabellybrt)
+* Luis Guilherme Sampaio Fontenele [2024116TADS0031] - [Luis-Sampaio1](https://github.com/Luis-Sampaio1)
+* Júlio Cerqueira Pires [2024116TADS0004] - [julioCerqueira-git](https://github.com/julioCerqueira-git)
+*  Vanessa Pereira Cunha [2024116TADS0023] - [vanessapereiracunha](https://github.com/vanessapereiracunha)
 
 ---
 
