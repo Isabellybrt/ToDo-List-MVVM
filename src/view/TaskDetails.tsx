@@ -1,15 +1,21 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useRoute, RouteProp } from "@react-navigation/native";
+import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { useTaskDetailsViewModel } from "../viewmodel/TaskDetailsViewModel";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 type RoutesProp = RouteProp<RootStackParamList, "Details">;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const TaskDetails = () => {
   const { task, onDelete } = useRoute<RoutesProp>().params;
+  const navigation = useNavigation<NavigationProp>();
 
-  const { deleteTask } = useTaskDetailsViewModel(task, onDelete);
+  const { deleteTask } = useTaskDetailsViewModel(task, () => {
+    onDelete(task.id);   
+    navigation.goBack();  
+  });
 
   return (
     <View style={styles.container}>
